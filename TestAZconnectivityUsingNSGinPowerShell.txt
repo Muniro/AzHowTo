@@ -1,0 +1,70 @@
+
+**** Test connectivity to a virtual machine
+**** Use az network watcher test-connectivity to run connection troubleshoot diagnostic tests to test the connectivity to a virtual machine over port 3389:
+# Test connectivity between two virtual machines that are in the same resource group over port 3389.
+az network watcher test-connectivity --resource-group 'myResourceGroup' --source-resource 'VM1' --dest-resource 'VM2' --protocol 'TCP' --dest-port '3389'
+
+If the virtual machines aren't in the same resource group, use their resource IDs instead of their names:
+# Test connectivity between two virtual machines that are in two different resource groups over port 3389.
+az network watcher test-connectivity --source-resource '/subscriptions/abcdef01-2345-6789-0abc-def012345678/resourceGroups/myResourceGroup1/providers/Microsoft.Compute/virtualMachines/VM1' --dest-resource '/subscriptions/abcdef01-2345-6789-0abc-def012345678/resourceGroups/myResourceGroup2/providers/Microsoft.Compute/virtualMachines/VM2' --protocol 'TCP' --dest-port '3389'
+
+**** Test connectivity to a website
+
+n this section, you test the connectivity between a virtual machine and a website.
+
+Use az network watcher test-connectivity to run connection troubleshoot to test the connectivity to www.bing.com:
+# Test connectivity from a virtual machine to www.bing.com.
+az network watcher test-connectivity --resource-group 'myResourceGroup' --source-resource 'VM1' --dest-address 'www.bing.com' --protocol 'TCP' --dest-port '443'
+
+
+**** Test connectivity to an IP address
+Use az network watcher test-connectivity to run connection troubleshoot to test RDP connectivity to 10.10.10.10:
+
+# Test connectivity from a virtual machine to 10.10.10.10 over port 3389.
+az network watcher test-connectivity --resource-group 'myResourceGroup' --source-resource 'VM1' --dest-address '10.10.10.10' --protocol 'TCP'  --dest-port 3389
+
+Register Insights provider NSG
+https://learn.microsoft.com/en-us/azure/network-watcher/nsg-flow-logs-portal
+
+Microsoft.Insights provider must be registered to successfully log traffic flowing through a network security group
+In the search box at the top of the portal, enter subscriptions. Select Subscriptions in the search results.
+
+Select the Azure subscription that you want to enable the provider for in Subscriptions.
+
+Under Settings, select Resource providers.
+
+Enter insight in the filter box.
+
+Confirm the status of the provider displayed is Registered. If the status is NotRegistered, select the Microsoft.Insights provider then select Register.
+
+
+
+NSG traffic flow log
+https://learn.microsoft.com/en-us/azure/network-watcher/nsg-flow-logs-powershell
+
+Microsoft.Insights provider must be registered to successfully log traffic flowing through a network security group. If you aren't sure if the Microsoft.Insights provider is registered, use Register-AzResourceProvider to register it.
+
+Azure PowerShell
+
+Copy
+
+Open Cloud Shell
+# Register Microsoft.Insights provider.
+Register-AzResourceProvider -ProviderNamespace 'Microsoft.Insights'
+
+Create a flow log
+Get the properties of the network security group that you want to create the flow log for and the storage account that you want to use to store the created flow log using Get-AzNetworkSecurityGroup and Get-AzStorageAccount respectively.
+
+Azure PowerShell
+
+Copy
+
+Open Cloud Shell
+# Place the network security group properties into a variable.
+$nsg = Get-AzNetworkSecurityGroup -Name 'myNSG' -ResourceGroupName 'myResourceGroup'
+
+# Place the storage account properties into a variable.
+$sa = Get-AzStorageAccount -Name 'myStorageAccount' -ResourceGroupName 'myResourceGroup'
+
+
+

@@ -1,0 +1,48 @@
+Create a virtual machine
+In this section, you create a virtual network and a subnet in the East US region. Then, you create a virtual machine in the subnet with a default network security group.
+
+Create a resource group using New-AzResourceGroup. An Azure resource group is a logical container into which Azure resources are deployed and managed.
+
+Azure PowerShell
+
+Copy
+
+Open Cloud Shell
+# Create a resource group.
+New-AzResourceGroup -Name 'myResourceGroup' -Location 'eastus' 
+Create a subnet configuration for the virtual machine subnet and the Bastion host subnet using New-AzVirtualNetworkSubnetConfig.
+
+Azure PowerShell
+
+Copy
+
+Open Cloud Shell
+# Create subnets configuration.
+$Subnet = New-AzVirtualNetworkSubnetConfig -Name 'mySubnet' -AddressPrefix '10.0.0.0/24'
+Create a virtual network using New-AzVirtualNetwork.
+
+Azure PowerShell
+
+Copy
+
+Open Cloud Shell
+# Create a virtual network.
+New-AzVirtualNetwork -Name 'myVNet' -ResourceGroupName 'myResourceGroup' -Location 'eastus' -AddressPrefix '10.0.0.0/16' -Subnet $Subnet
+Create a default network security group using New-AzNetworkSecurityGroup.
+
+Azure PowerShell
+
+Copy
+
+Open Cloud Shell
+# Create a network security group. 
+New-AzNetworkSecurityGroup -Name 'myVM-nsg' -ResourceGroupName 'myResourceGroup' -Location  'eastus'
+Create a virtual machine using New-AzVM. When prompted, enter a username and password.
+
+Azure PowerShell
+
+Copy
+
+Open Cloud Shell
+# Create a Linux virtual machine using the latest Ubuntu 20.04 LTS image.
+New-AzVm -ResourceGroupName 'myResourceGroup' -Name 'myVM' -Location 'eastus' -VirtualNetworkName 'myVNet' -SubnetName 'mySubnet' -SecurityGroupName 'myVM-nsg' -Image 'Canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest'
